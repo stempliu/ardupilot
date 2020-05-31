@@ -34,6 +34,9 @@ Mode *Plane::mode_from_mode_num(const enum Mode::Number num)
     case Mode::Number::AUTO:
         ret = &mode_auto;
         break;
+    case Mode::Number::AUTOHIT:
+        ret = &mode_autohit;
+        break;
     case Mode::Number::RTL:
         ret = &mode_rtl;
         break;
@@ -200,6 +203,9 @@ bool Plane::fly_inverted(void)
     }
     if (control_mode == &mode_auto && auto_state.inverted_flight) {
         return true;
+    }
+    if (control_mode == &mode_autohit && auto_state.inverted_flight) {
+            return true;
     }
     return false;
 }

@@ -1,16 +1,12 @@
 #include "mode.h"
 #include "Plane.h"
 
-bool ModeAuto::_enter()
+bool ModeAutohit::_enter()
 {
     plane.throttle_allows_nudging = true;
     plane.auto_throttle_mode = true;
     plane.auto_navigation_mode = true;
-    if (plane.quadplane.available() && plane.quadplane.enable == 2) {
-        plane.auto_state.vtol_mode = true;
-    } else {
-        plane.auto_state.vtol_mode = false;
-    }
+    plane.auto_state.vtol_mode = false;
     plane.next_WP_loc = plane.prev_WP_loc = plane.current_loc;
     // start or resume the mission, based on MIS_AUTORESET
     plane.mission.start_or_resume();
@@ -30,13 +26,12 @@ bool ModeAuto::_enter()
     return true;
 }
 
-void ModeAuto::_exit()
+void ModeAutohit::_exit()
 {
     if (plane.mission.state() == AP_Mission::MISSION_RUNNING) {
         //plane.mission.stop();(退出时清除任务）
 
-        if (plane.mission.get_current_nav_cmd().id == MAV_CMD_NAV_LAND &&
-            !plane.quadplane.is_vtol_land(plane.mission.get_current_nav_cmd().id))
+        if (plane.mission.get_current_nav_cmd().id == MAV_CMD_NAV_LAND)
         {
             plane.landing.restart_landing_sequence();
         }
@@ -44,21 +39,26 @@ void ModeAuto::_exit()
     plane.auto_state.started_flying_in_auto_ms = 0;
 }
 
-void ModeAuto::update()
+/*void ModeAutohit::distance_to_hitwp()
+{
+	//float radius_m = plane.g2.autohit_hitwp_radius_m;
+	float distance_m = plane.current_loc.get_distance(plane.next_WP_loc);
+	gcs().send_text(MAV_SEVERITY_CRITICAL, "Distance to wp= %.1fm", distance_m);
+}
+*/
+void ModeAutohit::update()
 {
     if (plane.mission.state() != AP_Mission::MISSION_RUNNING) {
         // this could happen if AP_Landing::restart_landing_sequence() returns false which would only happen if:
         // restart_landing_sequence() is called when not executing a NAV_LAND or there is no previous nav point
         plane.set_mode(plane.mode_rtl, ModeReason::MISSION_END);
-        gcs().send_text(MAV_SEVERITY_INFO, "Aircraft in auto without a running mission");
+        gcs().send_text(MAV_SEVERITY_INFO, "Aircraft in autohit without a running mission");
         return;
     }
 
     uint16_t nav_cmd_id = plane.mission.get_current_nav_cmd().id;
 
-    if (plane.quadplane.in_vtol_auto()) {
-        plane.quadplane.control_auto();
-    } else if (nav_cmd_id == MAV_CMD_NAV_TAKEOFF ||
+    if (nav_cmd_id == MAV_CMD_NAV_TAKEOFF ||
         (nav_cmd_id == MAV_CMD_NAV_LAND && plane.flight_stage == AP_Vehicle::FixedWing::FLIGHT_ABORT_LAND)) {
         plane.takeoff_calc_roll();
         plane.takeoff_calc_pitch();
@@ -86,5 +86,15 @@ void ModeAuto::update()
         plane.calc_nav_pitch();
         plane.calc_throttle();
     }
+
+    //autohit start
+    	//float radius_m = plane.g2.autohit_hitwp_radius_m;
+    	distance_m = plane.current_loc.get_distance(plane.next_WP_loc);
+    	gcs().send_text(MAV_SEVERITY_CRITICAL, "Distance to wp= %.1fm", distance_m);
+
+
+
+
+
 }
 

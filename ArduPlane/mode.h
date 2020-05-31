@@ -38,6 +38,7 @@ public:
         QRTL          = 21,
         QAUTOTUNE     = 22,
         QACRO         = 23,
+		AUTOHIT       = 27,
     };
 
     // Constructor
@@ -109,6 +110,25 @@ protected:
 
     bool _enter() override;
     void _exit() override;
+};
+
+class ModeAutohit : public Mode
+{
+public:
+
+    Number mode_number() const override { return Number::AUTOHIT; }
+    const char *name() const override { return "AUTOHIT"; }
+    const char *name4() const override { return "AUTOHIT"; }
+
+    // methods that affect movement of the vehicle in this mode
+    void update() override;
+
+protected:
+
+    bool _enter() override;
+    void _exit() override;
+	int hitwp_num;
+	float distance_m;
 };
 
 

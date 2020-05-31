@@ -90,6 +90,7 @@ void Plane::setup_glide_slope(void)
         break;
 
     case Mode::Number::AUTO:
+    case Mode::Number::AUTOHIT:
         // we only do glide slide handling in AUTO when above 20m or
         // when descending. The 20 meter threshold is arbitrary, and
         // is basically to prevent situations where we try to slowly

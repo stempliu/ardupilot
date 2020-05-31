@@ -564,6 +564,12 @@ public:
     AP_Int8 crow_flap_weight_inner;
     AP_Int8 crow_flap_options;
     AP_Int8 crow_flap_aileron_matching;
+
+    // autohit
+    AP_Float autohit_hitwp_radius_m;
+
+
+
 };
 
 extern const AP_Param::Info var_info[];

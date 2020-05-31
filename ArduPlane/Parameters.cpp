@@ -1239,7 +1239,24 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     // @User: Advanced
     AP_GROUPINFO("DSPOILER_AILMTCH", 21, ParametersG2, crow_flap_aileron_matching, 100),
 
-    AP_GROUPEND
+	// @Param: AUTOHIT_HITWP_RADIUS_M
+	// @DisplayName: AUTOHIT_HITWP_RADIUS_M
+	// @Description: radius to hitwp
+	// @Range: float
+    // @Units: M
+	// @Increment: 1
+	// @User: Advanced
+	AP_GROUPINFO("AUTOHIT_HITWP_RADIUS_M", 22, ParametersG2, autohit_hitwp_radius_m, 5),
+
+
+
+
+
+
+
+
+
+	AP_GROUPEND
 };
 
 ParametersG2::ParametersG2(void) :

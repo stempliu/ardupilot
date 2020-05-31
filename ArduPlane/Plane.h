@@ -142,6 +142,7 @@ public:
     friend class ModeCruise;
     friend class ModeAutoTune;
     friend class ModeAuto;
+    friend class ModeAutohit;
     friend class ModeRTL;
     friend class ModeLoiter;
     friend class ModeAvoidADSB;
@@ -276,6 +277,7 @@ private:
     ModeCruise mode_cruise;
     ModeAutoTune mode_autotune;
     ModeAuto mode_auto;
+    ModeAutohit mode_autohit;
     ModeRTL mode_rtl;
     ModeLoiter mode_loiter;
     ModeAvoidADSB mode_avoidADSB;

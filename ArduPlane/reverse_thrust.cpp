@@ -63,7 +63,39 @@ bool Plane::allow_reverse_thrust(void) const
                      nav_cmd == MAV_CMD_NAV_SPLINE_WAYPOINT);
         }
         break;
+    case Mode::Number::AUTOHIT:
+            {
+            uint16_t nav_cmd = mission.get_current_nav_cmd().id;
 
+            // never allow reverse thrust during takeoff
+            if (nav_cmd == MAV_CMD_NAV_TAKEOFF) {
+                return false;
+            }
+
+            // always allow regardless of mission item
+            allow |= (g.use_reverse_thrust & USE_REVERSE_THRUST_AUTO_ALWAYS);
+
+            // landing
+            allow |= (g.use_reverse_thrust & USE_REVERSE_THRUST_AUTO_LAND_APPROACH) &&
+                    (nav_cmd == MAV_CMD_NAV_LAND);
+
+            // LOITER_TO_ALT
+            allow |= (g.use_reverse_thrust & USE_REVERSE_THRUST_AUTO_LOITER_TO_ALT) &&
+                    (nav_cmd == MAV_CMD_NAV_LOITER_TO_ALT);
+
+            // any Loiter (including LOITER_TO_ALT)
+            allow |= (g.use_reverse_thrust & USE_REVERSE_THRUST_AUTO_LOITER_ALL) &&
+                        (nav_cmd == MAV_CMD_NAV_LOITER_TIME ||
+                         nav_cmd == MAV_CMD_NAV_LOITER_TO_ALT ||
+                         nav_cmd == MAV_CMD_NAV_LOITER_TURNS ||
+                         nav_cmd == MAV_CMD_NAV_LOITER_UNLIM);
+
+            // waypoints
+            allow |= (g.use_reverse_thrust & USE_REVERSE_THRUST_AUTO_WAYPOINT) &&
+                        (nav_cmd == MAV_CMD_NAV_WAYPOINT ||
+                         nav_cmd == MAV_CMD_NAV_SPLINE_WAYPOINT);
+            }
+        break;
     case Mode::Number::LOITER:
         allow |= (g.use_reverse_thrust & USE_REVERSE_THRUST_LOITER);
         break;

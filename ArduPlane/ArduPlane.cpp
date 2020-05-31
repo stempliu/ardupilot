@@ -394,17 +394,19 @@ void Plane::update_GPS_10Hz(void)
     calc_gndspeed_undershoot();
 }
 
+
+
 /*
   main control mode dependent update code
  */
 void Plane::update_control_mode(void)
 {
     Mode *effective_mode = control_mode;
-    if (control_mode == &mode_auto && g.auto_fbw_steer == 42) {
+    if ((control_mode == &mode_auto && g.auto_fbw_steer == 42)||(control_mode == &mode_autohit && g.auto_fbw_steer == 42)) {
         effective_mode = &mode_fbwa;
     }
 
-    if (effective_mode != &mode_auto) {
+    if (effective_mode != &mode_auto && effective_mode != &mode_autohit) {
         // hold_course is only used in takeoff and landing
         steer_state.hold_course_cd = -1;
     }
@@ -437,6 +439,7 @@ void Plane::update_navigation()
     
     switch (control_mode->mode_number()) {
     case Mode::Number::AUTO:
+    case Mode::Number::AUTOHIT:
         if (ahrs.home_is_set()) {
             mission.update();
         }
@@ -597,7 +600,7 @@ void Plane::update_flight_stage(void)
 {
     // Update the speed & height controller states
     if (auto_throttle_mode && !throttle_suppressed) {        
-        if (control_mode == &mode_auto) {
+        if (control_mode == &mode_auto||control_mode == &mode_autohit) {
             if (quadplane.in_vtol_auto()) {
                 set_flight_stage(AP_Vehicle::FixedWing::FLIGHT_VTOL);
             } else if (auto_state.takeoff_complete == false) {
@@ -679,6 +682,7 @@ float Plane::tecs_hgt_afe(void)
     }
     return hgt_afe;
 }
+
 
 #if OSD_ENABLED == ENABLED
 void Plane::publish_osd_info()

@@ -20,6 +20,9 @@ void Plane::update_soaring() {
     case Mode::Number::AUTO:
         g2.soaring_controller.suppress_throttle();
         break;
+    case Mode::Number::AUTOHIT:
+        g2.soaring_controller.suppress_throttle();
+        break;
     case Mode::Number::FLY_BY_WIRE_B:
     case Mode::Number::CRUISE:
         if (!g2.soaring_controller.suppress_throttle()) {
@@ -44,6 +47,7 @@ void Plane::update_soaring() {
 
     switch (control_mode->mode_number()) {
     case Mode::Number::AUTO:
+    case Mode::Number::AUTOHIT:
     case Mode::Number::FLY_BY_WIRE_B:
     case Mode::Number::CRUISE:
         // Test for switch into thermalling mode
@@ -81,6 +85,11 @@ void Plane::update_soaring() {
                 gcs().send_text(MAV_SEVERITY_INFO, "Soaring: Thermal ended, restoring AUTO");
                 set_mode(mode_auto, ModeReason::SOARING_THERMAL_ESTIMATE_DETERIORATED);
                 break;
+            case Mode::Number::AUTOHIT:
+                gcs().send_text(MAV_SEVERITY_INFO, "Soaring: Thermal ended, restoring AUTO");
+                set_mode(mode_auto, ModeReason::SOARING_THERMAL_ESTIMATE_DETERIORATED);
+                break;
+
 
             default:
                 break;

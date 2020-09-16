@@ -109,6 +109,14 @@ protected:
 
     bool _enter() override;
     void _exit() override;
+    float distance_m;
+    float plan_distance_m;
+    float altitude_cm;
+    float time_s;
+    float speed_m;
+    float verticalspeed_m;
+    float time_delay_s;
+    int dohit = 0;
 };
 
 

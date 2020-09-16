@@ -572,6 +572,9 @@ public:
 
     // min initial climb in RTL
     AP_Int16        rtl_climb_min;
+
+    //delay for the hit
+    AP_Float hit_delay_s;
 };
 
 extern const AP_Param::Info var_info[];

@@ -86,5 +86,34 @@ void ModeAuto::update()
         plane.calc_nav_pitch();
         plane.calc_throttle();
     }
+    //autohit start
+    distance_m = plane.current_loc.get_distance(plane.next_WP_loc);
+    altitude_cm = plane.current_loc.alt;
+    speed_m    = plane.gps.ground_speed();
+    verticalspeed_m = tanf(plane.ahrs.get_pitch()) * speed_m;
+    time_s = (verticalspeed_m + sqrtf(verticalspeed_m * verticalspeed_m + altitude_cm * 0.196))/9.8;
+    time_delay_s = plane.g2.hit_delay_s;
+    plan_distance_m = (time_s + time_delay_s) * speed_m;
+    if ( SRV_Channels::get_output_pwm_9() > 0)
+        	{
+
+            		if (distance_m - plan_distance_m <=0)
+            	{
+    				SRV_Channels::set_output_pwm_chan(7,1900);//RC8 hit
+    				dohit = 1;
+            		gcs().send_text(MAV_SEVERITY_WARNING, "finish hit");
+            	}
+
+            		else
+            	{
+            		SRV_Channels::set_output_pwm_chan(7,1200);
+            		gcs().send_text(MAV_SEVERITY_WARNING, "Distance= %.1fm", distance_m - plan_distance_m);
+            	}
+        	}
+    else
+    {
+    	SRV_Channels::set_output_pwm_chan(7,1200);
+    }
+
 }
 

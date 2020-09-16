@@ -170,6 +170,8 @@ public:
     // set the output value as a pwm value
     void set_output_pwm(uint16_t pwm);
 
+
+
     // get the output value as a pwm value
     uint16_t get_output_pwm(void) const { return output_pwm; }
 
@@ -327,6 +329,9 @@ public:
 
     // get pwm output for the first channel of the given function type.
     static bool get_output_pwm(SRV_Channel::Aux_servo_function_t function, uint16_t &value);
+
+    // get pwm output from channel 9.
+    static bool get_output_pwm_9();
 
     // get normalised output (-1 to 1 for angle, 0 to 1 for range). Value is taken from pwm value
     // return zero on error.

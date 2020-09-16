@@ -1271,6 +1271,9 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     // @User: Standard
     AP_GROUPINFO("RTL_CLIMB_MIN", 27, ParametersG2, rtl_climb_min, 0),
 
+	//hit delay
+	AP_GROUPINFO("HIT_DELAY_S", 28, ParametersG2, hit_delay_s, 0.2),
+
     AP_GROUPEND
 };
 

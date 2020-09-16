@@ -235,6 +235,7 @@ void Plane::Log_Write_AETR()
     logger.WriteBlock(&pkt, sizeof(pkt));
 }
 
+
 void Plane::Log_Write_RC(void)
 {
     logger.Write_RCIN();
@@ -276,6 +277,7 @@ const struct LogStructure Plane::log_structure[] = {
       "PIQA", PID_FMT,  PID_LABELS, PID_UNITS, PID_MULTS }, \
     { LOG_AETR_MSG, sizeof(log_AETR), \
       "AETR", "Qhhhhh",  "TimeUS,Ail,Elev,Thr,Rudd,Flap", "s-----", "F-----" },  \
+
 };
 
 void Plane::Log_Write_Vehicle_Startup_Messages()
@@ -295,6 +297,10 @@ void Plane::log_init(void)
     logger.Init(log_structure, ARRAY_SIZE(log_structure));
 }
 
+
+
+
+
 #else // LOGGING_ENABLED
 
 void Plane::Log_Write_Attitude(void) {}
@@ -310,5 +316,7 @@ void Plane::Log_Write_RC(void) {}
 void Plane::Log_Write_Vehicle_Startup_Messages() {}
 
 void Plane::log_init(void) {}
+
+void Plane::Log_Write_AUTOHIT() {}
 
 #endif // LOGGING_ENABLED
